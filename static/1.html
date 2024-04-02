@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>手绘地图与定位</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+  <div id="map" style="width: 100%; height: 400px;"></div>
+  <script>
+    var map = L.map('map').setView([51.505, -0.09], 13); // 设置初始地图视图
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    }).addTo(map); // 添加OpenStreetMap底图
+
+    function locateUser() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    }
+
+    function showPosition(position) {
+      var latlng = L.latLng(position.coords.latitude, position.coords.longitude); // 创建经纬度对象
+      map.panTo(latlng); // 将地图视图移动到定位点
+
+      L.marker(latlng).addTo(map); // 在定位点添加标记
+    }
+
+    locateUser(); // 初始化时获取用户定位
+
+    // 监听位置变化
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(function(position) {
+        var latlng = L.latLng(position.coords.latitude, position.coords.longitude);
+        map.panTo(latlng);
+        map.removeLayer(markers); // 移除旧的标记
+        var markers = L.marker(latlng).addTo(map); // 添加新标记
+      });
+    }
+  </script>
+</body>
+</html>
