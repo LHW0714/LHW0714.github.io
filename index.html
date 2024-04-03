@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+</head>
+
+<body>
+    <button onClick="startSharing()">开始群视频</button>
+    <div><video width="1000" height="1000" id="localVideo"></video></div>
+
+    <div id="videoContainer"></div>
+    <script>
+
+
+        let localStream;
+
+        const startSharing = function () {
+            navigator.mediaDevices
+                .getUserMedia({ video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: { exact: "environment" } }, audio: true })
+                .then((stream) => {
+                    localStream = stream;
+                    const local = document.querySelector("#localVideo");
+                    local.srcObject = localStream;
+                    local.autoplay = true;
+
+                });
+        };
+
+
+    </script>
+</body>
+
+</html>
